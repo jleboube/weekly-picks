@@ -1,0 +1,65 @@
+<!-- views/admin.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Games (Week <%= week %>, Season <%= season %>)</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin - Manage Games (Week <%= week %>, Season <%= season %>)</h1>
+    <h2>Add New Game</h2>
+    <form action="/admin/add-game" method="POST">
+        <input type="text" name="homeTeam" placeholder="Home Team" required>
+        <input type="text" name="awayTeam" placeholder="Away Team" required>
+        <button type="submit">Add Game</button>
+    </form>
+
+    <h2>Current Games</h2>
+    <table>
+        <tr>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Winner</th>
+            <th>Action</th>
+        </tr>
+        <% games.forEach(game => { %>
+            <tr>
+                <td><%= game.homeTeam %></td>
+                <td><%= game.awayTeam %></td>
+                <td>
+                    <form action="/admin/update-winner" method="POST">
+                        <input type="hidden" name="gameId" value="<%= game._id %>">
+                        <select name="winner">
+                            <option value="">Select winner</option>
+                            <option value="<%= game.homeTeam %>" <%= game.winner === game.homeTeam ? 'sele>
+                            <option value="<%= game.awayTeam %>" <%= game.winner === game.awayTeam ? 'sele>
+                        </select>
+                        <button type="submit">Update Winner</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/admin/delete-game" method="POST">
+                        <input type="hidden" name="gameId" value="<%= game._id %>">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+    </table>
+    <a href="/all-picks">View All Picks</a>
+    <a href="/leaderboard">View Leaderboard</a>
+    <a href="/logout">Logout</a>
+</body>
+</html>
