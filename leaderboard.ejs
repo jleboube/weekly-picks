@@ -1,0 +1,46 @@
+<!-- views/leaderboard.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Season <%= season %></title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .rank {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Leaderboard - Season <%= season %></h1>
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Total Score</th>
+        </tr>
+        <% seasonTotals.forEach((total, index) => { %>
+            <tr>
+                <td class="rank"><%= index + 1 %></td>
+                <td><%= total.user.username %></td>
+                <td><%= total.totalScore %></td>
+            </tr>
+        <% }); %>
+    </table>
+    <a href="/picks">Back to My Picks</a>
+    <a href="/all-picks">View All Picks</a>
+    <a href="/logout">Logout</a>
+</body>
+</html>
