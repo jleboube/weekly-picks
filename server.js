@@ -37,7 +37,7 @@ const Game = mongoose.model('Game', {
 
 // Score model
 const Score = mongoose.model('Score', {
-  user: mongoose.Schema.Types.ObjectId,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   week: Number,
   season: Number,
   score: Number
@@ -45,7 +45,7 @@ const Score = mongoose.model('Score', {
 
 // SeasonTotal model
 const SeasonTotal = mongoose.model('SeasonTotal', {
-  user: mongoose.Schema.Types.ObjectId,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   season: Number,
   totalScore: Number
 });
@@ -146,8 +146,36 @@ app.get('/all-picks', isAuthenticated, async (req, res) => {
 
 app.get('/leaderboard', isAuthenticated, async (req, res) => {
   const { season } = getCurrentWeekAndSeason();
-  const seasonTotals = await SeasonTotal.find({ season }).sort('-totalScore').populate('user', 'username');
-  res.render('leaderboard', { seasonTotals, season });
+  
+  // Fetch all scores for the current season
+  const allScores = await Score.find({ season }).populate('user', 'username');
+  
+  // Calculate season totals
+  const seasonTotals = allScores.reduce((totals, score) => {
+    const userId = score.user._id.toString();
+    if (!totals[userId]) {
+      totals[userId] = {
+        user: {
+          _id: score.user._id,
+          username: score.user.username
+        },
+        totalScore: 0,
+        weeklyScores: {}
+      };
+    }
+    totals[userId].totalScore += score.score;
+    totals[userId].weeklyScores[score.week] = score.score;
+    return totals;
+  }, {});
+
+  // Convert to array and sort
+  const sortedTotals = Object.values(seasonTotals).sort((a, b) => b.totalScore - a.totalScore);
+
+  res.render('leaderboard', { 
+    seasonTotals: sortedTotals, 
+    season, 
+    getCurrentWeekAndSeason 
+  });
 });
 
 app.get('/logout', (req, res) => {
