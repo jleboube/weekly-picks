@@ -9,7 +9,7 @@ To set up and run this project:
    ```
    npm install express mongoose express-session bcrypt ejs
    ```
-4. Create a `views` directory and add the EJS files (index.ejs, register.ejs, login.ejs, leaderboard.ejs, all-picks.ejs, and picks.ejs).
+4. Create a `views` directory and add the EJS files (`index.ejs, register.ejs, login.ejs, leaderboard.ejs, all-picks.ejs, and picks.ejs`).
 5. Move `server.js` to the root directory.
 6. Make sure you have MongoDB installed and running on your system.
 7. Start the server by running: `node server.js`
