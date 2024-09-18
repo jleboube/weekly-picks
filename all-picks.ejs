@@ -1,0 +1,53 @@
+<!-- views/all-picks.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Picks - Week <%= week %>, Season <%= season %></title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Picks - Week <%= week %>, Season <%= season %></h1>
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Score</th>
+            <% games.forEach(game => { %>
+                <th><%= game.homeTeam %> vs <%= game.awayTeam %></th>
+            <% }); %>
+        </tr>
+        <% users.forEach(user => { %>
+            <tr>
+                <td><%= user.username %></td>
+                <td>
+                    <% const userScore = scores.find(s => s.user.toString() === user._id.toString()); %>
+                    <%= userScore ? userScore.score : 0 %>
+                </td>
+                <% games.forEach(game => { %>
+                    <% const pick = user.picks.find(p => p.game.toString() === game._id.toString()); %>
+                    <td>
+                        <%= pick ? pick.pick : 'No pick' %>
+                        <% if (game.winner && pick) { %>
+                            (<%= pick.pick === game.winner ? '✓' : '✗' %>)
+                        <% } %>
+                    </td>
+                <% }); %>
+            </tr>
+        <% }); %>
+    </table>
+    <a href="/picks">Back to My Picks</a>
+    <a href="/leaderboard">View Leaderboard</a>
+    <a href="/logout">Logout</a>
+</body>
+</html>
