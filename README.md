@@ -1,7 +1,7 @@
 # weekly-picks
 fun node site to manage family weekly foot-ball picks
 
-o set up and run this project:
+To set up and run this project:
 
 1. Create a new directory for your project and navigate to it in the terminal.
 2. Initialize a new Node.js project: `npm init -y`
