@@ -1,0 +1,49 @@
+<!-- views/picks.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Picks - Week <%= week %>, Season <%= season %></title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Picks - Week <%= week %>, Season <%= season %></h1>
+    <form action="/picks" method="POST">
+        <table>
+            <tr>
+                <th>Home Team</th>
+                <th>Away Team</th>
+                <th>Your Pick</th>
+            </tr>
+            <% games.forEach(game => { %>
+                <tr>
+                    <td><%= game.homeTeam %></td>
+                    <td><%= game.awayTeam %></td>
+                    <td>
+                        <select name="<%= game._id %>">
+                            <option value="">Select a winner</option>
+                            <option value="<%= game.homeTeam %>" <%= userPicks.find(p => p.game.toString() === game._id.toString() && p.pick === game.homeTeam) ? 'selected' : '' %>><%= game.homeTeam %></option>
+                            <option value="<%= game.awayTeam %>" <%= userPicks.find(p => p.game.toString() === game._id.toString() && p.pick === game.awayTeam) ? 'selected' : '' %>><%= game.awayTeam %></option>
+                        </select>
+                    </td>
+                </tr>
+            <% }); %>
+        </table>
+        <button type="submit">Save Picks</button>
+    </form>
+    <a href="/all-picks">View All Picks</a>
+    <a href="/leaderboard">View Leaderboard</a>
+    <a href="/logout">Logout</a>
+</body>
+</html>
